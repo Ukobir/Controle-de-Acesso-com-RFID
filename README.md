@@ -4,7 +4,7 @@
   <br>
     <img width="200px" src="https://github.com/Ukobir/Controle-de-Acesso/blob/main/imagens/logo.png">
   <br>
-  Estação de Monitoramento de Cheias
+  Controle de Acesso à bilioteca
   <br>
 </h1>
 

@@ -10,7 +10,7 @@
  * que incrementa o número de vagas oculpadas.
  * Ao apertar o botão B ocorre o mesmo mas decrementa o número de vagas.
  * Ao aproximar a tag registrada no leitor RFID é execultada uma task que
- * incrementa o número de vagas oculpadas. E ao aproximar novamente 
+ * incrementa o número de vagas oculpadas. E ao aproximar novamente
  * decrementa o número de vagas.
  * Ao apertar o botão do joystick ocorre o reset de vagas oculpadas e
  * utiliza um semaforo binário garantindo sua execução sem concorrência.
@@ -49,6 +49,8 @@ uint32_t tempo_atual;
 
 ssd1306_t ssd;
 uint16_t contador = 0;
+bool flag_card = 0;
+bool flag_tag = 0;
 SemaphoreHandle_t xContadorInc;
 SemaphoreHandle_t xContadorDec;
 SemaphoreHandle_t xDisplayMutex;
@@ -196,6 +198,8 @@ void vTaskReset(void *params)
         if (xSemaphoreTake(xButtonReset, portMAX_DELAY) == pdTRUE)
         {
             contador = 0;
+            flag_card = 0;
+            flag_tag = 0;
             vTaskDisplay();
             // Beep duplo
             beep(BUZZER_A, 30e3);
@@ -220,8 +224,7 @@ void vTaskRFID(void *params)
     PCD_AntennaOn(mfrc); // Liga antena
     vTaskDelay(pdMS_TO_TICKS(500));
     char uid_str[24]; // Buffer para UID formatado
-    bool flag_card = 0;
-    bool flag_tag = 0;
+
     while (true)
     {
         while (!PICC_IsNewCardPresent(mfrc))
